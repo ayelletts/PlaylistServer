@@ -27,9 +27,9 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   try {
-    const user = await userLogic.getUserById(req.query.id);
+    const user = await userLogic.getUserById(req._id);
     res.send(user);
   } catch (error) {
     console.log(error);

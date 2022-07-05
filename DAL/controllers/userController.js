@@ -1,19 +1,5 @@
 const { userModel } = []; //require("../models/user");
 
-const user1 = {
-  firstName: "Esti",
-  lastName: "Lauder",
-  userName: "lauderE",
-  password: "112233",
-  gender: "female",
-  mobile: "0503334445",
-  address: {
-    street: "kenedi",
-    houseNumber: 123,
-    city: "London",
-  },
-};
-
 async function create(data) {
   return await userModel.create(data);
 }

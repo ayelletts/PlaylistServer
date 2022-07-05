@@ -1,20 +1,6 @@
 const userController = require("../DAL/controllers/userController");
 //const { userModel } = require("../DAL/models/user");
-const { createToken } = require("./jwt");
-
-let user1 = {
-  firstName: "Esti",
-  lastName: "Lauder",
-  userName: "lauderE@gmail.com",
-  password: "112233",
-  gender: "female",
-  mobile: "0503334445",
-  address: {
-    street: "kenedi",
-    houseNumber: 123,
-    city: "London",
-  },
-};
+const { createToken } = require("../middleware/jwt");
 
 // async function getUserDetailsById(id) {
 //   //find
@@ -43,21 +29,17 @@ exports.register = async (userFields) => {
   return userController.create(userFields);
 };
 
-exports.login = async (userName, password) => {
+exports.login = async (email, password) => {
   //basic validation
-  if (!userName || !password) {
+  if (!email || !password) {
     throw { code: 400, message: "Incomplete user details" };
   }
   //user exist?
-  const user = await userController.read({
-    userName: userName,
-    password: password,
-  });
+  const user = await userController.read({ email }, "+password");
   console.log(user);
   if (!user) {
     throw { code: 404, message: "User does not exist" };
   }
-  console.log("**************", user.password);
 
   //password match?
   if (user.password !== password) {

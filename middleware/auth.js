@@ -1,22 +1,20 @@
-const { validateToken } = require("../BL/jwt");
-const { readOne } = require("../DAL/controllers/userController");
+const jwt = require("jsonwebtoken");
+// const { validateToken } = require("./jwt");
 
-async function auth(req, res, next) {
-  console.log(req);
-  const token = req.headers.authorization;
-  try {
-    // verify token
-    const decode = validateToken(token); // an error will be cought in catch statement
-    // check it the user id exist
-    const user = await readOne({ _id: decode.id });
-    if (!user) {
-      throw { code: 503, message: "User unauthorized" };
-    }
-    // next / res error
-    next();
-  } catch (error) {
-    res.status(503).send(error.message);
+const auth = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const token = authHeader.split(" ")[1];
+    jwt.verify(token, "1234", (err, verifyToken) => {
+      console.log("err", err);
+      if (err) {
+        return res.sendStatus(403);
+      }
+      req._id = verifyToken._id;
+      next();
+    });
+  } else {
+    res.sendStatus(401);
   }
-}
-
+};
 module.exports = auth;

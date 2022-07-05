@@ -16,4 +16,4 @@ app.use(require("cors")());
 app.use("/", router);
 
 app.listen(port, () => console.log(`server is running => ${port}`));
-//require("./DAL/db").connect();
+require("./DAL/db").connect();
