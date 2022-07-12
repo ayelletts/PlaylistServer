@@ -1,12 +1,10 @@
-const { userModel } = []; //require("../models/user");
+const { userModel } = require("../models/user");
 
 async function create(data) {
   return await userModel.create(data);
 }
-//async function read(filter, proj) {
-async function read(filter) {
-  return user1;
-  //return await userModel.find(filter, proj);
+async function read(filter, proj) {
+  return await userModel.find(filter, proj);
 }
 async function readOne(filter) {
   return await userModel.findOne(filter);

@@ -23,6 +23,7 @@ exports.getAllUsers = async () => {
 
 exports.register = async (userFields) => {
   const user = await userController.read({ userName: userFields.userName });
+  console.log("********** user *************", user);
   if (user.length) {
     throw { code: 400, message: "userName already exist" };
   }
@@ -30,14 +31,14 @@ exports.register = async (userFields) => {
 };
 
 exports.login = async (email, password) => {
+  console.log("email", email, "password", password);
   //basic validation
   if (!email || !password) {
     throw { code: 400, message: "Incomplete user details" };
   }
   //user exist?
   const user = await userController.read({ email }, "+password");
-  console.log(user);
-  if (!user) {
+  if (user.length === 0) {
     throw { code: 404, message: "User does not exist" };
   }
 

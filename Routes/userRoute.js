@@ -10,18 +10,20 @@ const auth = require("../middleware/auth");
 router.post("/login", async (req, res) => {
   console.log("login");
   try {
-    const token = await userLogic.login(req.body.userName, req.body.password);
+    const token = await userLogic.login(req.body.email, req.body.password);
     res.send(token);
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(error.code).send(error.message);
   }
 });
 
-router.post("/register", async (req, res) => {
+router.post("/signup", async (req, res) => {
+  //להחזיר טוקן
   try {
+    console.log("req", req.body);
     const newUser = await userLogic.register(req.body);
     console.log(newUser, "newUser");
-    res.send("register");
+    res.send("signup");
   } catch (error) {
     res.status(500).send(error.message);
   }

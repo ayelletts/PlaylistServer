@@ -12,12 +12,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     unique: true,
   },
-  salt: {
-    type: String,
-    required: true,
-    select: false,
-  },
-  hashedPassword: {
+  password: {
     type: String,
     required: true,
     select: false,
