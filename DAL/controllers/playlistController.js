@@ -1,33 +1,34 @@
-const userController = require("../DL/controllers/userController");
-const orderController = require("../DL/controllers/orderController");
-const itemController = require("../DL/controllers/itemController");
+const { playlistModel } = require("../models/playlist");
 
-async function createPlaylist(playlist) {
-  let res = {};
-
-  // לבדוק האם היוזר קיים
-  // const user = await userController.read({email:order.user})[0]
-  const user = await userController.readOne({ email: playlist.user });
-  if (!user) {
-    console.log("Error- user not found");
-    return false;
-  }
-
-  console.log(res);
-  return res;
+async function create(data) {
+  return await playlistModel.create(data);
+}
+async function read(filter, proj) {
+  console.log("filter: ", filter);
+  return await playlistModel.find(filter, proj);
+}
+async function readOne(filter) {
+  return await playlistModel.findOne(filter);
+}
+async function updateOne(filter, newData) {
+  return await playlistModel.updateOne(filter, newData);
+}
+async function updateMany(filter, newData) {
+  return await playlistModel.updateMany(filter, newData);
+}
+async function deleteOne(filter) {
+  return await playlistModel(filter, { isActive: false });
+}
+async function deleteMany(filter) {
+  return await playlistModel(filter, { isActive: false });
 }
 
-async function getOrdersByUser() {}
-async function getOrderById() {}
-
-const orderFromClient = {
-  user: "avicohen1212@hotmail.com",
-  cart: [
-    {
-      item: "9KJ7F5",
-      qty: 6,
-    },
-  ],
+module.exports = {
+  create,
+  read,
+  readOne,
+  updateOne,
+  updateMany,
+  deleteOne,
+  deleteMany,
 };
-
-createOrder(orderFromClient);

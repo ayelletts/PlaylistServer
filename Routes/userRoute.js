@@ -8,7 +8,7 @@ const auth = require("../middleware/auth");
 // });
 
 router.post("/login", async (req, res) => {
-  console.log("login");
+  console.log("login", req.body.email, req.body.password);
   try {
     const token = await userLogic.login(req.body.email, req.body.password);
     res.send(token);
@@ -18,25 +18,36 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/signup", async (req, res) => {
+  console.log("signup");
   //להחזיר טוקן
   try {
     console.log("req", req.body);
-    const newUser = await userLogic.register(req.body);
-    console.log(newUser, "newUser");
-    res.send("signup");
+    const token = await userLogic.register(req.body);
+    res.send(token);
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(511).send(error.message);
   }
 });
 
 router.get("/", auth, async (req, res) => {
   try {
-    const playLists/user = await userLogic.getUserPlaylists(req._id);
-    res.send(playLists/user);
+    console.log("user router req.body:", req.headers.authorization);
+    const user = await userLogic.getUserById(req._id);
+    res.send(user);
   } catch (error) {
     console.log(error);
     res.status(400).send(`Error occured :: ${error.message}`);
   }
 });
+
+// router.get("/", auth, async (req, res) => {
+//   try {
+//     const playLists/user = await userLogic.getUserPlaylists(req._id);
+//     res.send(playLists/user);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(400).send(`Error occured :: ${error.message}`);
+//   }
+// });
 
 module.exports = router;

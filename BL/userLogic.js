@@ -22,16 +22,17 @@ exports.getAllUsers = async () => {
 };
 
 exports.register = async (userFields) => {
-  const user = await userController.read({ userName: userFields.userName });
+  let user = await userController.read({ email: userFields.email });
   console.log("********** user *************", user);
-  if (user.length) {
-    throw { code: 400, message: "userName already exist" };
+
+  if (user.length > 0) {
+    throw { code: 400, message: "email already exist" };
   }
-  return userController.create(userFields);
+  user = userController.create(userFields);
+  return createToken(user._id);
 };
 
 exports.login = async (email, password) => {
-  console.log("email", email, "password", password);
   //basic validation
   if (!email || !password) {
     throw { code: 400, message: "Incomplete user details" };
@@ -43,11 +44,12 @@ exports.login = async (email, password) => {
   }
 
   //password match?
-  if (user.password !== password) {
+  console.log("password", password, "user password", user[0].password);
+  if (user[0].password !== password) {
     throw { code: 503, message: "Unauthorized" };
   }
 
-  return createToken(user._id);
+  return createToken(user[0]._id);
 };
 
 exports.createUser = async (userFields) => {

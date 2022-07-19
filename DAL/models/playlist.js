@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
+const { SchemaTypes } = mongoose;
+require("./user");
 
-const songSchema = new mongoose.Schema({
+const playlistSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -12,10 +14,13 @@ const songSchema = new mongoose.Schema({
   },
   songs: [
     {
-      itemId: { type: String },
+      songId: String,
+      videoUrl: String,
+      imgUrl: String,
+      title: String,
     },
   ],
 });
 
-const song = mongoose.model("playlist", songSchema);
+const playlistModel = mongoose.model("playlist", playlistSchema);
 module.exports = { playlistModel };
