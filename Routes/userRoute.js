@@ -8,31 +8,36 @@ const auth = require("../middleware/auth");
 // });
 
 router.post("/login", async (req, res) => {
-  console.log("login", req.body.email, req.body.password);
+  // console.log("login", req.body.email, req.body.password);
   try {
     const token = await userLogic.login(req.body.email, req.body.password);
-    res.send(token);
+    const user = await userLogic.getUserAndPlayLists(req.body.email);
+    res.status(200).send({ token: token, user: user });
   } catch (error) {
+    console.log("login: Error: ", error.message);
     res.status(error.code).send(error.message);
   }
 });
 
 router.post("/signup", async (req, res) => {
-  console.log("signup");
+  // console.log("signup");
   //להחזיר טוקן
   try {
-    console.log("req", req.body);
+    // console.log("req", req.body);
     const token = await userLogic.register(req.body);
     res.send(token);
   } catch (error) {
+    console.log("Error: Signup error", error);
     res.status(511).send(error.message);
   }
 });
 
 router.get("/", auth, async (req, res) => {
   try {
-    console.log("user router req.body:", req.headers.authorization);
-    const user = await userLogic.getUserById(req._id);
+    // console.log("user router req.body:", req.headers.authorization);
+    const userFull = await userLogic.getUserById(req._id);
+    const user = await userLogic.getUserAndPlayLists(userFull.email);
+
     res.send(user);
   } catch (error) {
     console.log(error);

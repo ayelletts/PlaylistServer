@@ -3,7 +3,7 @@ const secret = process.env.SECRET_JWT || "1234";
 
 const createToken = (id) => {
   console.log("id----------------------", id);
-  const token = jwt.sign({ _id: id }, secret, { expiresIn: "1h" });
+  const token = jwt.sign({ _id: id }, secret, { expiresIn: "24h" });
   return token;
 };
 

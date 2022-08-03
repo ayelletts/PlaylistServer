@@ -4,7 +4,7 @@ async function create(data) {
   return await playlistModel.create(data);
 }
 async function read(filter, proj) {
-  console.log("filter: ", filter);
+  // console.log(" pl controller filter:s ", filter);
   return await playlistModel.find(filter, proj);
 }
 async function readOne(filter) {

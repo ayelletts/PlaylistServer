@@ -1,10 +1,20 @@
 const playlistController = require("../DAL/controllers/playlistController");
 const { createToken } = require("../middleware/jwt");
 
-exports.getUserPlaylists = async (uid) => {
-  const playlists = await playlistController.read({ user: uid });
-  if (playlists.length == 0) {
-    throw { code: 501, message: "No playlists found for user" };
-  }
-  return users;
+exports.getUserPlayLists = async (uid) => {
+  // console.log("playlistLogic getUserPlayLists", uid);
+  return await playlistController.read({ userId: uid });
+};
+
+exports.newPlaylist = async (playlistDetails) => {
+  // console.log("playlistdetails", playlistDetails);
+  return await playlistController.create(playlistDetails);
+};
+
+exports.addToPlaylist = async (playlistId, song) => {
+  // console.log("playlistdetails", playlistDetails);
+  return await playlistController.updateOne(
+    { _id: playlistId },
+    { $push: { songs: song } }
+  );
 };

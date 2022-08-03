@@ -1,17 +1,9 @@
 const userController = require("../DAL/controllers/userController");
+const playlistsLogic = require("../BL/playlistLogic");
 //const { userModel } = require("../DAL/models/user");
 const { createToken } = require("../middleware/jwt");
-
-// async function getUserDetailsById(id) {
-//   //find
-//   userController.readOne(id);
-//   //check if null or exist
-//   //return error/user
-// }
-
-// async function register() {
-//   // validations
-// }
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 exports.getAllUsers = async () => {
   const users = await userController.read({});
@@ -28,7 +20,13 @@ exports.register = async (userFields) => {
   if (user.length > 0) {
     throw { code: 400, message: "email already exist" };
   }
-  user = userController.create(userFields);
+  const salt = await bcrypt.genSalt();
+  const hashedPassword = await bcrypt.hash(userFields.password, salt);
+  userFields.salt = salt;
+  userFields.hashedPassword = hashedPassword;
+
+  user = await userController.create(userFields);
+  console.log("user", user);
   return createToken(user._id);
 };
 
@@ -37,15 +35,22 @@ exports.login = async (email, password) => {
   if (!email || !password) {
     throw { code: 400, message: "Incomplete user details" };
   }
+  const user = await userController.read({ email }, "+salt +hashedPassword");
+  // console.log("*/*/*/*/*/*/*/*/*/ user:", user);
   //user exist?
-  const user = await userController.read({ email }, "+password");
   if (user.length === 0) {
     throw { code: 404, message: "User does not exist" };
   }
 
   //password match?
-  console.log("password", password, "user password", user[0].password);
-  if (user[0].password !== password) {
+  // console.log(
+  //   "salt",
+  //   user[0].salt,
+  //   "user hashed password",
+  //   user[0].hashedPassword
+  // );
+  let hash = await bcrypt.hash(password, user[0].salt);
+  if (hash !== user[0].hashedPassword) {
     throw { code: 503, message: "Unauthorized" };
   }
 
@@ -62,11 +67,28 @@ exports.createUser = async (userFields) => {
 
 exports.getUserById = async (id) => {
   const user = await userController.read({ _id: id });
+  // console.log("user", user);
+  if (user.length == 0) {
+    throw { code: 403, message: "User does not exist" };
+  }
+  return user[0];
+};
+
+exports.getUserAndPlayLists = async (email) => {
+  // console.log("userLogic getUserAndPlayLists", email);
+  const user = await userController.read({ email });
+  // console.log("user", user);
 
   if (user.length == 0) {
     throw { code: 403, message: "User does not exist" };
   }
-  return user;
+  const playLists = await playlistsLogic.getUserPlayLists(user[0]._id);
+  // console.log("playLists", playLists);
+  return {
+    email: user[0].email,
+    name: user[0].firstName,
+    playlists: playLists,
+  };
 };
 
 exports.updateUser = async (id, newField) => {

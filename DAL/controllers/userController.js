@@ -4,7 +4,7 @@ async function create(data) {
   return await userModel.create(data);
 }
 async function read(filter, proj) {
-  console.log("filter: ", filter);
+  // console.log("filter: ", filter);
   return await userModel.find(filter, proj);
 }
 async function readOne(filter) {

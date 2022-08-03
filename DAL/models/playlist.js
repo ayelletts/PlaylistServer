@@ -7,6 +7,10 @@ const playlistSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  imgUrlPl: {
+    type: String,
+    required: true,
+  },
   userId: {
     type: SchemaTypes.ObjectId,
     ref: "user",
