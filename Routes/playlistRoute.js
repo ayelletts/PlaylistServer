@@ -50,4 +50,30 @@ router.post("/addToList", auth, async (req, res) => {
   }
 });
 
+router.delete("/deleteSong", auth, async (req, res) => {
+  //   console.log("remove song from list: ", req.body);
+  try {
+    await playlistLogic.removeSongFromPlaylist(
+      req.body.playlistId,
+      req.body.songId
+    );
+
+    const userAndLists = await userLogic.getUserAndPlayListsByUid(
+      req.body.userId
+    );
+    console.log("----------", userAndLists);
+
+    const selectedPlaylist = await playlistLogic.getPlayListByUid(
+      req.body.userId,
+      req.body.playlistId
+    );
+    console.log("---------- selectedPlaylist", selectedPlaylist);
+    const resData = { user: userAndLists, selectedPlaylist: selectedPlaylist };
+    res.status(200).send(resData);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(`Error occured :: ${error.message}`);
+  }
+});
+
 module.exports = router;

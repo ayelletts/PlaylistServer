@@ -91,6 +91,23 @@ exports.getUserAndPlayLists = async (email) => {
   };
 };
 
+exports.getUserAndPlayListsByUid = async (userId) => {
+  console.log("userLogic getUserAndPlayListsByUid", userId);
+  const user = await userController.read({ _id: userId });
+  console.log("user", user);
+
+  if (user.length == 0) {
+    throw { code: 403, message: "User does not exist" };
+  }
+  const playLists = await playlistsLogic.getUserPlayLists(user[0]._id);
+  console.log("playLists", playLists);
+  return {
+    email: user[0].email,
+    name: user[0].firstName,
+    playlists: playLists,
+  };
+};
+
 exports.updateUser = async (id, newField) => {
   const user = await userController.updateOne({ _id: id }, newField);
   if (user.length == 0) {

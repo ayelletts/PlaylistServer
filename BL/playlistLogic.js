@@ -6,6 +6,16 @@ exports.getUserPlayLists = async (uid) => {
   return await playlistController.read({ userId: uid });
 };
 
+exports.getPlayListByUid = async (uid, playlistId) => {
+  // console.log(
+  //   "playlistLogic getPlayListByUid uid",
+  //   uid,
+  //   "playlistId",
+  //   playlistId
+  // );
+  return await playlistController.read({ userId: uid, _id: playlistId });
+};
+
 exports.newPlaylist = async (playlistDetails) => {
   // console.log("playlistdetails", playlistDetails);
   return await playlistController.create(playlistDetails);
@@ -17,4 +27,10 @@ exports.addToPlaylist = async (playlistId, song) => {
     { _id: playlistId },
     { $push: { songs: song } }
   );
+};
+
+exports.removeSongFromPlaylist = async (playlistId, songId) => {
+  // console.log("removeSongFromPlaylist playlistdetails", playlistId);
+
+  return await playlistController.deleteSong(playlistId, songId);
 };

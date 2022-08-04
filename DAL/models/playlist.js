@@ -16,12 +16,20 @@ const playlistSchema = new mongoose.Schema({
     ref: "user",
     required: true,
   },
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
   songs: [
     {
       songId: String,
       videoUrl: String,
       imgUrl: String,
       title: String,
+      isActive: {
+        type: Boolean,
+        default: true,
+      },
     },
   ],
 });
