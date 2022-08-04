@@ -16,7 +16,7 @@ router.post("/new", auth, async (req, res) => {
 
     if (playList) {
       const userAndLists = await userLogic.getUserAndPlayLists(req.body.email);
-      console.log("*************", userAndLists);
+      //   console.log("*************", userAndLists);
       res.status(200).send(userAndLists);
     } else {
       console.log("ERROR playList", playList);
@@ -29,7 +29,7 @@ router.post("/new", auth, async (req, res) => {
 });
 
 router.post("/addToList", auth, async (req, res) => {
-  console.log("add to list: ", req.body);
+  //   console.log("add to list: ", req.body);
   try {
     const playList = await playlistLogic.addToPlaylist(
       req.body.listId,
@@ -38,7 +38,7 @@ router.post("/addToList", auth, async (req, res) => {
 
     if (playList) {
       const userAndLists = await userLogic.getUserAndPlayLists(req.body.email);
-      console.log("----------", userAndLists);
+      //   console.log("----------", userAndLists);
       res.status(200).send(userAndLists);
     } else {
       console.log("ERROR playList", playList);
@@ -61,13 +61,13 @@ router.delete("/deleteSong", auth, async (req, res) => {
     const userAndLists = await userLogic.getUserAndPlayListsByUid(
       req.body.userId
     );
-    console.log("----------", userAndLists);
+    // console.log("----------", userAndLists);
 
     const selectedPlaylist = await playlistLogic.getPlayListByUid(
       req.body.userId,
       req.body.playlistId
     );
-    console.log("---------- selectedPlaylist", selectedPlaylist);
+    // console.log("---------- selectedPlaylist", selectedPlaylist);
     const resData = { user: userAndLists, selectedPlaylist: selectedPlaylist };
     res.status(200).send(resData);
   } catch (error) {

@@ -7,9 +7,9 @@ async function read(filter) {
   // const query = {
   //   "songs.$.isActive": true,
   // };
-  console.log(" pl controller read filter: ", filter);
+  // console.log(" pl controller read filter: ", filter);
   const result = await playlistModel.find(filter); //.find(query);
-  console.log(" pl controller read result: ", result);
+  // console.log(" pl controller read result: ", result);
   return result;
 }
 async function readOne(filter) {

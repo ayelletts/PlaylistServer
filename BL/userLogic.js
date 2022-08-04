@@ -15,7 +15,7 @@ exports.getAllUsers = async () => {
 
 exports.register = async (userFields) => {
   let user = await userController.read({ email: userFields.email });
-  console.log("********** user *************", user);
+  // console.log("********** user *************", user);
 
   if (user.length > 0) {
     throw { code: 400, message: "email already exist" };
@@ -26,7 +26,7 @@ exports.register = async (userFields) => {
   userFields.hashedPassword = hashedPassword;
 
   user = await userController.create(userFields);
-  console.log("user", user);
+  // console.log("user", user);
   return createToken(user._id);
 };
 
@@ -92,15 +92,15 @@ exports.getUserAndPlayLists = async (email) => {
 };
 
 exports.getUserAndPlayListsByUid = async (userId) => {
-  console.log("userLogic getUserAndPlayListsByUid", userId);
+  // console.log("userLogic getUserAndPlayListsByUid", userId);
   const user = await userController.read({ _id: userId });
-  console.log("user", user);
+  // console.log("user", user);
 
   if (user.length == 0) {
     throw { code: 403, message: "User does not exist" };
   }
   const playLists = await playlistsLogic.getUserPlayLists(user[0]._id);
-  console.log("playLists", playLists);
+  // console.log("playLists", playLists);
   return {
     email: user[0].email,
     name: user[0].firstName,
