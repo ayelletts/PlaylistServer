@@ -25,7 +25,9 @@ router.post("/signup", async (req, res) => {
   try {
     // console.log("req", req.body);
     const token = await userLogic.register(req.body);
-    res.send(token);
+    const user = await userLogic.getUserAndPlayLists(req.body.email);
+
+    res.status(200).send({ token: token, user: user });
   } catch (error) {
     console.log("Error: Signup error", error);
     res.status(511).send(error.message);
