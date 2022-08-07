@@ -1,6 +1,5 @@
 const userController = require("../DAL/controllers/userController");
 const playlistsLogic = require("../BL/playlistLogic");
-//const { userModel } = require("../DAL/models/user");
 const { createToken } = require("../middleware/jwt");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");

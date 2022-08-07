@@ -1,4 +1,6 @@
 const jwt = require("jsonwebtoken");
+const secret = process.env.SECRET_JWT || "1234";
+
 // const { validateToken } = require("./jwt");
 
 const auth = (req, res, next) => {
@@ -8,7 +10,7 @@ const auth = (req, res, next) => {
   if (authHeader) {
     const token = authHeader.split(" ")[1];
     // console.log("token", token);
-    jwt.verify(token, "1234", (err, verifyToken) => {
+    jwt.verify(token, secret, (err, verifyToken) => {
       // console.log("err", err);
       if (err) {
         return res.sendStatus(403);
