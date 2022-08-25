@@ -12,10 +12,13 @@ router.post("/login", async (req, res) => {
   try {
     const token = await userLogic.login(req.body.email, req.body.password);
     const user = await userLogic.getUserAndPlayLists(req.body.email);
+    // console.log("-------- login user", user);
     res.status(200).send({ token: token, user: user });
   } catch (error) {
-    console.log("login: Error: ", error.message);
-    res.status(error.code).send(error.message);
+    // console.log("login: Error: ", error.message);
+    // console.log("login: Code: ", error.code);
+    if (error.code == undefined) error.code = 500;
+    res.status(Number(error.code)).send(error.message);
   }
 });
 
@@ -29,6 +32,7 @@ router.post("/signup", async (req, res) => {
 
     res.status(200).send({ token: token, user: user });
   } catch (error) {
+    if (error.code == undefined) error.code = 500;
     console.log("Error: Signup error", error);
     res.status(511).send(error.message);
   }

@@ -49,10 +49,11 @@ exports.login = async (email, password) => {
   //   user[0].hashedPassword
   // );
   let hash = await bcrypt.hash(password, user[0].salt);
+  // console.log("hashhhhhhhhh:", hash);
   if (hash !== user[0].hashedPassword) {
     throw { code: 503, message: "Unauthorized" };
   }
-
+  // console.log("after hashing password");
   return createToken(user[0]._id);
 };
 
@@ -73,20 +74,32 @@ exports.getUserById = async (id) => {
   return user[0];
 };
 
+exports.getUserByEmail = async (email) => {
+  const user = await userController.read({ email: email });
+  // console.log("user", user);
+  if (user.length == 0) {
+    throw { code: 403, message: "User does not exist" };
+  }
+  return user[0];
+};
+
 exports.getUserAndPlayLists = async (email) => {
   // console.log("userLogic getUserAndPlayLists", email);
   const user = await userController.read({ email });
-  // console.log("user", user);
+  // console.log("******user", user);
 
   if (user.length == 0) {
     throw { code: 403, message: "User does not exist" };
   }
   const playLists = await playlistsLogic.getUserPlayLists(user[0]._id);
-  // console.log("playLists", playLists);
+  // console.log("*******playLists", playLists);
+  sortedPlayLists = playLists.sort((p1, p2) => {
+    return p2.listMark - p1.listMark;
+  });
   return {
     email: user[0].email,
     name: user[0].firstName,
-    playlists: playLists,
+    playlists: sortedPlayLists,
   };
 };
 
@@ -99,11 +112,14 @@ exports.getUserAndPlayListsByUid = async (userId) => {
     throw { code: 403, message: "User does not exist" };
   }
   const playLists = await playlistsLogic.getUserPlayLists(user[0]._id);
-  // console.log("playLists", playLists);
+  sortedPlayLists = playLists.sort((p1, p2) => {
+    return p2.listMark - p1.listMark;
+  });
+  // console.log("******** playLists", playLists);
   return {
     email: user[0].email,
     name: user[0].firstName,
-    playlists: playLists,
+    playlists: sortedPlayLists,
   };
 };
 

@@ -11,9 +11,9 @@ const auth = (req, res, next) => {
     const token = authHeader.split(" ")[1];
     // console.log("token", token);
     jwt.verify(token, secret, (err, verifyToken) => {
-      // console.log("err", err);
       if (err) {
-        return res.sendStatus(403);
+        console.log("err", err.message);
+        return res.status(403).send(err.message);
       }
       req._id = verifyToken._id;
       next();

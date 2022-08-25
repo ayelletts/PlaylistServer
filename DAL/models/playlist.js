@@ -20,12 +20,14 @@ const playlistSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  listMark: { type: Number, default: 0 },
   songs: [
     {
       songId: String,
       videoUrl: String,
       imgUrl: String,
       title: String,
+      songMark: { type: Number, default: 0 },
       isActive: {
         type: Boolean,
         default: true,
@@ -33,6 +35,8 @@ const playlistSchema = new mongoose.Schema({
     },
   ],
 });
+
+playlistSchema.index({ userId: 1, title: 1 }, { unique: true });
 
 const playlistModel = mongoose.model("playlist", playlistSchema);
 module.exports = { playlistModel };
